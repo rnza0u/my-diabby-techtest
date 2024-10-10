@@ -2,7 +2,14 @@
     # the workspace name
     name: 'my-diabby-techtest',
     # add an entry to this dictionnary everytime you want to create a new project.
-    projects: {},
+    projects: {
+        app: {
+            path: 'angular'
+        },
+        api: {
+            path: 'nest'
+        }
+    },
     # workspace global settings
     settings: {
         # a default project selector to use when none is specified
@@ -12,8 +19,8 @@
          # workspace log level if not overriden with the CLI 
         logLevel: 'Warn',
         # parallelism level to use when executing tasks (for e.g when using the `run` or `spawn` commands) if not overidden with the CLI.
-        parallelism: 'None',
+        parallelism: 'Infinite',
         # parallelism level to use when resolving executors
-        resolutionParallelism: 'None'
+        resolutionParallelism: 'Infinite'
     }
 }
