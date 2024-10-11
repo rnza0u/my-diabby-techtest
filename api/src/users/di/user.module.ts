@@ -13,35 +13,35 @@ import { UserEntity } from '../infrastructure/entities/user.entity'
 import { CommonModule } from '../../common/di/common.module'
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserEntity]),
-    CommonModule
-  ],
-  controllers: [
-    UsersController,
-  ],
-  providers: [
-    UserResponseMapper,
-    UserEntityMapper,
-    UserExceptionsFilter,
-    {
-      provide: PERSIST_USER,
-      useClass: TypeOrmPersistUser
-    },
-    {
-      provide: READ_USERS,
-      useClass: TypeOrmReadUsers
-    },
-    {
-      provide: AddUserUseCase,
-      useFactory: (readUsers, persistUser) => new AddUserUseCase(readUsers, persistUser),
-      inject: [READ_USERS, PERSIST_USER] 
-    },
-    {
-      provide: PaginateUsersUseCase,
-      useFactory: (readUsers) => new PaginateUsersUseCase(readUsers),
-      inject: [READ_USERS]
-    }
-  ],
+    imports: [
+        TypeOrmModule.forFeature([UserEntity]),
+        CommonModule
+    ],
+    controllers: [
+        UsersController,
+    ],
+    providers: [
+        UserResponseMapper,
+        UserEntityMapper,
+        UserExceptionsFilter,
+        {
+            provide: PERSIST_USER,
+            useClass: TypeOrmPersistUser
+        },
+        {
+            provide: READ_USERS,
+            useClass: TypeOrmReadUsers
+        },
+        {
+            provide: AddUserUseCase,
+            useFactory: (readUsers, persistUser) => new AddUserUseCase(readUsers, persistUser),
+            inject: [READ_USERS, PERSIST_USER] 
+        },
+        {
+            provide: PaginateUsersUseCase,
+            useFactory: (readUsers) => new PaginateUsersUseCase(readUsers),
+            inject: [READ_USERS]
+        }
+    ],
 })
 export class UserModule { }

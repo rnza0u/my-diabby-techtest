@@ -11,3 +11,5 @@ services:
     extends:
       file: ./compose/api.yml
       service: api
+    depends_on:
+      - database

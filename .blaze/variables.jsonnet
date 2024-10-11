@@ -3,6 +3,9 @@ local blaze = std.extVar('blaze');
 {
     // global workspace variables, can be overriden with other files (see the `include` key below), or through the CLI. 
     vars: {
+        lint: {
+            fix: false
+        },
         migrations: {
             name: null
         }

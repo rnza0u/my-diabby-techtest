@@ -8,7 +8,7 @@ import { UserResponseMapper } from '../mappers/user-response.mapper'
 import { PaginateUsersQuery, paginateUsersQueryOpenApiSchema, paginateUsersQuerySchema } from '../requests/paginate-users-query'
 import { ZodValidationPipe } from '../../../../common/application/rest/pipes/zod.pipe'
 import { UserExceptionsFilter } from '../filters/user-exceptions.filter'
-import { ApiBody, ApiConflictResponse, ApiExtraModels, ApiOkResponse, ApiQuery, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger'
+import { ApiBody, ApiConflictResponse, ApiExtraModels, ApiOkResponse, ApiTags, getSchemaPath } from '@nestjs/swagger'
 import { ApiQueryParameters, GenericRestResponses } from '../../../../common/application/rest/openapi/helpers'
 import { ErrorResponse } from '../../../../common/application/rest/responses/error-response'
 
@@ -20,50 +20,50 @@ import { ErrorResponse } from '../../../../common/application/rest/responses/err
 @UseFilters(UserExceptionsFilter)
 @GenericRestResponses()
 export class UsersController {
-  constructor(
-    private readonly paginateUsers: PaginateUsersUseCase,
-    private readonly addUser: AddUserUseCase,
-    private readonly mapper: UserResponseMapper
-  ) { }
+    constructor(
+        private readonly paginateUsers: PaginateUsersUseCase,
+        private readonly addUser: AddUserUseCase,
+        private readonly mapper: UserResponseMapper
+    ) { }
 
-  @Get()
-  @ApiExtraModels(UserResponse)
-  @ApiOkResponse({
-    description: 'A page of users is returned.',
-    schema: pageResponseOpenApiSchema(getSchemaPath(UserResponse))
-  })
-  @ApiQueryParameters(paginateUsersQueryOpenApiSchema)
-  @UsePipes(new ZodValidationPipe(paginateUsersQuerySchema))
-  async paginate(@Query() query: PaginateUsersQuery): Promise<PageResponse<UserResponse>> {
-    const page = await this.paginateUsers.paginate({
-      itemsPerPage: query.itemsPerPage,
-      page: query.page
+    @Get()
+    @ApiExtraModels(UserResponse)
+    @ApiOkResponse({
+        description: 'A page of users is returned.',
+        schema: pageResponseOpenApiSchema(getSchemaPath(UserResponse))
     })
-    return new PageResponse(
-      page.items.map(user => this.mapper.fromDomainUser(user)), 
-      page.total
-    )
-  }
+    @ApiQueryParameters(paginateUsersQueryOpenApiSchema)
+    @UsePipes(new ZodValidationPipe(paginateUsersQuerySchema))
+    async paginate(@Query() query: PaginateUsersQuery): Promise<PageResponse<UserResponse>> {
+        const page = await this.paginateUsers.paginate({
+            itemsPerPage: query.itemsPerPage,
+            page: query.page
+        })
+        return new PageResponse(
+            page.items.map(user => this.mapper.fromDomainUser(user)), 
+            page.total
+        )
+    }
 
-  @Post()
-  @ApiOkResponse({
-    description: 'The user was created.',
-    type: UserResponse
-  })
-  @ApiConflictResponse({
-    description: 'The user already exists.',
-    type: ErrorResponse
-  })
-  @ApiBody({
-    schema: addUserOpenApiSchema,
-    description: 'User creation parameters.'
-  })
-  @UsePipes(new ZodValidationPipe(addUserBodySchema))
-  async add(@Body() body: AddUserBody): Promise<UserResponse> {
-    const user = await this.addUser.add({
-      firstname: body.firstname,
-      lastname: body.lastname
+    @Post()
+    @ApiOkResponse({
+        description: 'The user was created.',
+        type: UserResponse
     })
-    return this.mapper.fromDomainUser(user)
-  }
+    @ApiConflictResponse({
+        description: 'The user already exists.',
+        type: ErrorResponse
+    })
+    @ApiBody({
+        schema: addUserOpenApiSchema,
+        description: 'User creation parameters.'
+    })
+    @UsePipes(new ZodValidationPipe(addUserBodySchema))
+    async add(@Body() body: AddUserBody): Promise<UserResponse> {
+        const user = await this.addUser.add({
+            firstname: body.firstname,
+            lastname: body.lastname
+        })
+        return this.mapper.fromDomainUser(user)
+    }
 }

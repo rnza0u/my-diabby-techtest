@@ -1,8 +1,8 @@
 import { ArgumentsHost, Catch, ConflictException, ExceptionFilter } from '@nestjs/common'
 import { UserException } from '../../../domain/exceptions/user.exception'
-import { RestExceptionHandler } from '../../../../common/application/rest/services/rest-exception-handler.service'
 import { Response, Request } from 'express'
 import { UserAlreadyExists } from '../../../domain/exceptions/user-already-exists.exception'
+import { RestExceptionHandler } from '../../../../common/application/rest/services/rest-exception-handler.service'
 
 /**
  * Filtre d'exceptions pour les erreurs métier du domaine utilisateur ({@link UserException}).

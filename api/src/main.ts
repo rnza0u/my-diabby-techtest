@@ -9,29 +9,29 @@ import { HostMiddleware } from './common/application/rest/middlewares/host.middl
 import { NextFunction, Request, Response } from 'express'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+    const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
-  const { env, http: { bind, frontend, openapi, trustProxy } } = app.get<Configuration>(CONFIGURATION)
+    const { env, http: { bind, frontend, openapi, trustProxy } } = app.get<Configuration>(CONFIGURATION)
 
-  app.set('trust proxy', trustProxy)
+    app.set('trust proxy', trustProxy)
   
-  if (env === 'production'){
-    app.set('env', 'production')
-    app.set('x-powered-by', false)
-  }
+    if (env === 'production'){
+        app.set('env', 'production')
+        app.set('x-powered-by', false)
+    }
 
-  if (openapi.expose)
-    setupOpenApi(app)
+    if (openapi.expose)
+        setupOpenApi(app)
 
-  app.enableCors({
-    methods: ['GET', 'POST'],
-    origin: frontend.allowedOrigins
-  })
+    app.enableCors({
+        methods: ['GET', 'POST'],
+        origin: frontend.allowedOrigins
+    })
 
-  for (const middleware of [app.get(SecurityHeadersMiddleware), app.get(HostMiddleware)])
-    app.use((req: Request, res: Response, next: NextFunction) => middleware.use(req, res, next))
+    for (const middleware of [app.get(SecurityHeadersMiddleware), app.get(HostMiddleware)])
+        app.use((req: Request, res: Response, next: NextFunction) => middleware.use(req, res, next))
   
-  await app.listen(bind.port, bind.addr)
+    await app.listen(bind.port, bind.addr)
 }
 
 bootstrap()

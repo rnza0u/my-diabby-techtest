@@ -1,5 +1,5 @@
 
-import { PipeTransform, ArgumentMetadata, BadRequestException, InternalServerErrorException } from '@nestjs/common'
+import { PipeTransform, BadRequestException, InternalServerErrorException } from '@nestjs/common'
 import { ZodError, ZodSchema } from 'zod'
 
 /**
@@ -8,7 +8,7 @@ import { ZodError, ZodSchema } from 'zod'
 export class ZodValidationPipe implements PipeTransform {
     constructor(private readonly schema: ZodSchema) { }
 
-    async transform(value: unknown, _metadata: ArgumentMetadata): Promise<unknown> {
+    async transform(value: unknown): Promise<unknown> {
         try {
             return await this.schema.parseAsync(value)
         } catch (error: unknown) {

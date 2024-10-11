@@ -1,21 +1,20 @@
 import { applyDecorators } from '@nestjs/common'
-import { ApiBadRequestResponse, ApiExtraModels, ApiInternalServerErrorResponse, ApiQuery, DocumentBuilder, getSchemaPath, SwaggerModule } from '@nestjs/swagger'
+import { ApiBadRequestResponse, ApiExtraModels, ApiInternalServerErrorResponse, ApiQuery, DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ErrorResponse } from '../responses/error-response'
 import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface'
-import { NestApplication } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
 
 export const DOCS_PATH = '/docs'
 
 export function setupOpenApi(app: NestExpressApplication): void {
     const config = new DocumentBuilder()
-      .setTitle('Tech test')
-      .setDescription('Some documentation for this tech test !')
-      .setVersion('1.0')
-      .addTag('users')
-      .build()
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup(DOCS_PATH, app, document);
+        .setTitle('Tech test')
+        .setDescription('Some documentation for this tech test !')
+        .setVersion('1.0')
+        .addTag('users')
+        .build()
+    const document = SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup(DOCS_PATH, app, document)
 }
 
 /**

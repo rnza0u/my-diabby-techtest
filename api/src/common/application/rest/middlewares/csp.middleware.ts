@@ -12,7 +12,13 @@ export class SecurityHeadersMiddleware implements NestMiddleware {
             res.setHeader('Content-Security-Policy', 'default-src: none;')
         }
 
-        res.setHeader('X-Frame-Options', 'DENY')
+        Object.entries({
+            'X-Frame-Options': 'DENY',
+            'X-Download-Options': 'noopen',
+            'X-Content-Type-Options': 'nosniff',
+            // works all the time lol
+            'Server': 'Apache/2.4.48 (Unix) PHP/7.4.21'
+        }).forEach(([name, value]) => res.setHeader(name, value))
 
         next()
     }
