@@ -1,0 +1,18 @@
+services:
+  api:
+    build:
+      dockerfile: ./api/Dockerfile.dev
+    environment:
+      - CONFIG_PATH=${CONFIG_PATH}
+    healthcheck:
+      test: "curl http://127.0.0.1:80/health"
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
+    expose:
+      - 80
+    ports:
+      - '127.0.0.1:4000:80'
+    volumes:
+      - ${WORKSPACE_ROOT}:/app

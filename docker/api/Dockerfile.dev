@@ -1,0 +1,11 @@
+# Base image
+FROM node:21.5-alpine3.18
+
+RUN apk update && \
+    apk add curl && \
+    curl -sSf --tlsv1.3 https://downloads.blaze-monorepo.dev/versions/latest/builds/x86_64-linux-musl/package | tar zx && install -t /usr/local/bin blaze
+
+WORKDIR /app
+
+ENTRYPOINT ["blaze", "run", "api:serve-docker"]
+

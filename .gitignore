@@ -2,7 +2,6 @@
 .idea
 .vscode
 
-
 .user.env
 .blaze/*
 !.blaze/helpers

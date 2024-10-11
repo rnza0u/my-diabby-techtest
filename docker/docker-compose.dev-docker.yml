@@ -1,0 +1,13 @@
+include:
+  - compose/volumes.yml
+services:
+  database:
+    extends:
+      file: ./compose/database.yml
+      service: database
+    expose:
+      - 5432
+  api:
+    extends:
+      file: ./compose/api.yml
+      service: api

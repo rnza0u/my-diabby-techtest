@@ -4,10 +4,16 @@
     # add an entry to this dictionnary everytime you want to create a new project.
     projects: {
         app: {
-            path: 'angular'
+            path: 'app',
+            description: 'The Angular webapp.'
         },
         api: {
-            path: 'nest'
+            path: 'api',
+            description: 'The Nest.js API.'
+        },
+        docker: {
+            path: 'docker',
+            description: 'Docker related targets.'
         }
     },
     # workspace global settings
