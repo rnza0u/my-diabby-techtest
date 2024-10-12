@@ -4,23 +4,27 @@ import { User } from '../models/user'
 import { Injectable } from '@angular/core'
 import { UsersRestService } from '../services/users-rest.service'
 
+export const itemsPerPageOptions = [5, 10, 25, 50] as const
+export type ItemsPerPage = typeof itemsPerPageOptions[number]
+
 export type LoadParams = Readonly<{
     page?: number
-    itemsPerPage?: number
+    itemsPerPage?: ItemsPerPage
 }>
 
-export type ParamsState = Readonly<{
+export type CurrentParams = Readonly<{
     currentPage: number
-    itemsPerPage: number
+    itemsPerPage: ItemsPerPage
 }>
 
-export type PageState = 
+export type CurrentPage = 
     |Readonly<{
         step: 'loaded',
         page: Page<User>
     }>
     |Readonly<{
-        step: 'loading'
+        step: 'loading',
+        rememberedTotal?: number
     }>
     |Readonly<{
         step: 'error',
@@ -30,29 +34,30 @@ export type PageState =
 @Injectable({
     providedIn: 'root'
 })
-export class UsersStore {
+export class UsersPaginationStore {
 
-    private readonly page$ = new BehaviorSubject<PageState>({
+    private readonly page$ = new BehaviorSubject<CurrentPage>({
         step: 'loading'
     })
 
-    private readonly params$ = new BehaviorSubject<ParamsState>({
+    private readonly params$ = new BehaviorSubject<CurrentParams>({
         currentPage: 0,
-        itemsPerPage: 10
+        itemsPerPage: 5
     })
 
     constructor(private readonly usersRestService: UsersRestService){}
 
-    params(): Observable<ParamsState> {
+    params(): Observable<CurrentParams> {
         return this.params$.asObservable()
     }
 
-    page(): Observable<PageState> {
+    page(): Observable<CurrentPage> {
         return this.page$.asObservable()
     }
 
-    load(params: LoadParams): void {
+    load(params: LoadParams = {}): void {
         const currentParams = this.params$.value
+        const currentPage=  this.page$.value
         const newPage = (() => {
             if (typeof params.itemsPerPage === 'number' && params.itemsPerPage !== currentParams.itemsPerPage)
                 return 0
@@ -65,8 +70,9 @@ export class UsersStore {
             currentPage: newPage,
             itemsPerPage: newItemsPerPage
         }
+        
         this.params$.next(newParams)
-        this.page$.next({ step: 'loading' })
+        this.page$.next({ step: 'loading', ...(currentPage.step === 'loaded' ? { rememberedTotal: currentPage.page.total } : {}) })
         this.usersRestService.paginate(newParams.currentPage, newParams.itemsPerPage)
             .subscribe({
                 next: page => this.page$.next({

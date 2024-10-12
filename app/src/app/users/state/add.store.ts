@@ -1,5 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs'
-import { Page } from '../../common/models/page'
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { User } from '../models/user'
 import { UsersRestService } from '../services/users-rest.service'
 import { Injectable } from '@angular/core'
@@ -11,7 +10,7 @@ export type AddUserParams = Readonly<{
     lastname: string
 }>
 
-export type State =
+export type Creation =
     | Readonly<{
         step: 'waiting'
     }>
@@ -19,9 +18,8 @@ export type State =
         step: 'adding',
         params: AddUserParams
     }>
-    | Readonly<{
-        step: 'success',
-        user: User
+    |Readonly<{
+        step: 'done'
     }>
     | Readonly<{
         step: 'error',
@@ -35,35 +33,43 @@ export class AddUserStore {
 
     constructor(private readonly usersRestService: UsersRestService) { }
 
-    private readonly state$ = new BehaviorSubject<State>({
+    private readonly creation$ = new BehaviorSubject<Creation>({
         step: 'waiting'
     })
 
-    state(): Observable<State> {
-        return this.state$.asObservable()
+    private readonly created$ = new Subject<User>()
+
+    creation(): Observable<Creation> {
+        return this.creation$.asObservable()
+    }
+
+    created(): Observable<User> {
+        return this.created$.asObservable()
+    }
+
+    start(): void {
+        if (this.creation$.value.step !== 'waiting')
+            this.creation$.next({
+                step: 'waiting'
+            })
     }
 
     add(params: AddUserParams): void {
-        this.state$.next({
+        this.creation$.next({
             step: 'adding',
             params
         })
         this.usersRestService.add(params.firstname, params.lastname)
             .subscribe({
-                next: user => {
-                    this.state$.next({
-                        step: 'success',
-                        user
-                    })
-                },
+                next: user => this.created$.next(user),
                 error: error => {
                     if (error instanceof ApiErrorResponse && error.status === HttpStatusCode.Conflict)
-                        this.state$.next({
+                        this.creation$.next({
                             step: 'error',
                             error: 'already-exists'
                         })
                     else
-                        this.state$.next({
+                        this.creation$.next({
                             step: 'error',
                             error
                         })

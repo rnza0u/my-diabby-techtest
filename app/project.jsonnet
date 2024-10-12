@@ -1,12 +1,16 @@
 local modes = {
-    'local': {
-        addr: '127.0.0.1',
-        port: '4000'
-    },
-    'docker': {
-        addr: '0.0.0.0',
-        port: '80'
-    }
+  'dev-local': {
+    addr: '127.0.0.1',
+    port: '4000',
+  },
+  'dev-docker': {
+    addr: '0.0.0.0',
+    port: '80',
+  },
+  'e2e-local': {
+    addr: '127.0.0.1',
+    port: '4000',
+  },
 };
 
 local serveTargets = {
@@ -16,13 +20,13 @@ local serveTargets = {
       commands: [
         {
           program: './node_modules/.bin/ng',
-          arguments: ['serve', '--port', modes[name].port, '--host', modes[name].addr]
+          arguments: ['serve', '--port', modes[name].port, '--host', modes[name].addr],
         },
       ],
     },
     dependencies: ['install', 'source'],
   }
-  for name in ['local', 'docker']
+  for name in std.objectFields(modes)
 };
 
 {
@@ -36,6 +40,7 @@ local serveTargets = {
       },
       cache: {
         invalidateWhen: {
+          filesMissing: ['node_modules'],
           inputChanges: ['package.json'],
           outputChanges: ['package-lock.json'],
         },
@@ -51,6 +56,14 @@ local serveTargets = {
           ],
         },
       },
-    }
+    },
+    clean: {
+      executor: 'std:commands',
+      options: {
+        commands: [
+          'rm -rf node_modules .angular dist',
+        ],
+      },
+    },
   } + serveTargets,
 }

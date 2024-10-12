@@ -1,13 +1,13 @@
 local modes = {
-  'dev-local': {
-    composeFile: 'docker-compose.dev-local.yml',
+  'only-database': {
+    composeFile: 'docker-compose.only-database.yml',
     env: {},
   },
-  'dev-docker': {
-    composeFile: 'docker-compose.dev-docker.yml',
+  'dev-all': {
+    composeFile: 'docker-compose.dev.yml',
     env: {
       WORKSPACE_ROOT: '{{ root }}',
-      CONFIG_PATH: '{{ root}}/{{ workspace.projects.api.path }}/configuration/dev-docker.json',
+      API_CONFIG_PATH: '{{ root}}/{{ workspace.projects.api.path }}/configuration/dev-docker.json',
       UID: '{{ shell "id -u" trim=true }}',
     },
   },
@@ -59,5 +59,9 @@ local downTargets = {
 };
 
 {
-  targets: upTargets + downTargets,
+  targets: upTargets + downTargets + {
+    clean: {
+      dependencies: [name + '-clean' for name in std.objectFields(modes)]
+    }
+  },
 }

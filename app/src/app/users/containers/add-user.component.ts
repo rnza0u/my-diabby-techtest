@@ -1,11 +1,11 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core'
-import { AddUserStore } from '../state/add-user.store'
+import { AddUserStore } from '../state/add.store'
 import { AddUserFormComponent, SubmitEvent } from '../presenters/add-user-form.component'
 import { AsyncPipe } from '@angular/common'
 import { Subscription } from 'rxjs'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Router } from '@angular/router'
-import { AddUserHeadingComponent } from '../presenters/add-user-title.component'
+import { AddUserHeadingComponent } from '../presenters/add-user-heading.component'
 
 @Component({
     standalone: true,
@@ -13,10 +13,10 @@ import { AddUserHeadingComponent } from '../presenters/add-user-title.component'
     selector: 'app-add-user',
     template: `
         <app-add-user-heading (back)="navigateBack()"></app-add-user-heading>
-        @let state = (state$ | async)!;
+        @let creation = (creation$ | async)!;
         <app-add-user-form 
             (submitted)="formSubmit($event)" 
-            [disabled]="['adding', 'success'].includes(state.step)">
+            [disabled]="['adding', 'done'].includes(creation.step)">
         </app-add-user-form>
     `,
     styles: [
@@ -27,23 +27,20 @@ import { AddUserHeadingComponent } from '../presenters/add-user-title.component'
 })
 export class AddUserComponent implements OnInit, OnDestroy {
 
-    readonly state$ = this.store.state()
+    readonly creation$ = this.store.creation()
 
     private readonly snackBar = inject(MatSnackBar)
     
-    subscription!: Subscription
+    subscriptions: Subscription[] = []
 
     constructor(private readonly store: AddUserStore, private readonly router: Router){}
     
     ngOnInit(): void {
-        this.subscription = this.state$
-            .subscribe(state => {
-                switch (state.step){
-                    case 'success':
-                        this.snackMessage('L\'utilisateur a été ajouté avec succès. Redirection en cours...')
-                        setTimeout(() => this.navigateToUsers(), 3000)
-                        break
-                    case 'error':
+        this.store.start()
+        this.subscriptions.push(
+            this.creation$
+                .subscribe(state => {
+                    if (state.step === 'error'){
                         switch (state.error){
                             case 'already-exists':
                                 this.snackMessage('Cet utilisateur existe déjà !')
@@ -52,12 +49,18 @@ export class AddUserComponent implements OnInit, OnDestroy {
                                 this.snackMessage(`Une erreur est survenue...`)
                                 break
                         }
-                }
+                    }
+                }),
+            this.store.created().subscribe(user => {
+                this.snackMessage(`L'utilisateur ${user.fullname} a été ajouté avec succès. Redirection en cours...`)
+                setTimeout(() => this.navigateToUsers(), 3000)
             })
+        )
     }
 
     ngOnDestroy(): void {
-        this.subscription.unsubscribe()
+        for (const s of this.subscriptions)
+            s.unsubscribe()
     }
 
     formSubmit(event: SubmitEvent): void {

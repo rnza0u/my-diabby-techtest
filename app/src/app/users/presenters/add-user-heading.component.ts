@@ -1,13 +1,14 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { MatButtonModule } from '@angular/material/button'
 
-// j'aime les emojis
 const emojis = ['🥷', '🧑🏽‍🍳', '🫅', '🧞', '🧑🏽‍🔬', '🧑🏽‍🚒', '🧑‍✈️', '🧑‍🚀', '🧑‍🎨', '👷🏽‍♂️', '🧙‍♂️', '🧑🏿‍🔧', '👨🏿‍⚕️', '🧑‍💼', '🦹', '🧑‍🌾']
 
 @Component({
     standalone: true,
+    imports: [MatButtonModule],
     selector: 'app-add-user-heading',
     template: `
-        <a href="#" (click)="back.emit()">Retour...</a>
+        <button mat-button (click)="back.emit()">Retour...</button>
         <h1>{{ emoji }} Nouvel utilisateur</h1>
     `,
     styles: [

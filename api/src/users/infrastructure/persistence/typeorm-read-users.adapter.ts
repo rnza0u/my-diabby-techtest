@@ -22,7 +22,8 @@ export class TypeOrmReadUsers implements ReadUsers {
     async readPage(params: PaginateUsersParams): Promise<Page<User>> {
         const [entities, total] = await this.repository.findAndCount({
             skip: params.itemsPerPage * params.page,
-            take: params.itemsPerPage
+            take: params.itemsPerPage,
+            ...(params.orderBy ? { order: { [params.orderBy]: 'ASC' } } : {})
         })
         return new Page(entities.map(entity => this.mapper.toDomain(entity)), total)
     }

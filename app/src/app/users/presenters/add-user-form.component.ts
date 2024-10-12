@@ -32,15 +32,15 @@ const notBlank: ValidatorFn = control => {
         <form [formGroup]="form" (ngSubmit)="submit()">
             <mat-form-field>
                 <mat-label>Nom</mat-label>
-                <input matInput formControlName="lastname">
-                @if (form.controls.lastname.dirty && form.controls.lastname.invalid) {
+                <input matInput formControlName="lastname" required>
+                @if (form.controls.lastname.touched && form.controls.lastname.invalid) {
                     <mat-error>Le nom fourni est invalide.</mat-error>
                 }
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Prénom</mat-label>
-                <input matInput formControlName="firstname">
-                @if (form.controls.firstname.dirty && form.controls.firstname.invalid) {
+                <input matInput formControlName="firstname" required>
+                @if (form.controls.firstname.touched && form.controls.firstname.invalid) {
                     <mat-error>Le prénom fourni est invalide.</mat-error>
                 }
             </mat-form-field>
@@ -51,6 +51,7 @@ const notBlank: ValidatorFn = control => {
         `form {
             display: flex;
             flex-direction: column;
+            gap: 16px;
         }`
     ]
 })

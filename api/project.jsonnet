@@ -9,14 +9,14 @@ local serveTargets = {
           program: 'npm',
           arguments: ['run', 'start:dev'],
           environment: {
-            CONFIG_PATH: '{{ project.root }}/configurations/dev-' + name + '.json',
+            CONFIG_PATH: '{{ project.root }}/configurations/' + name + '.json',
           },
         },
       ],
     },
     dependencies: ['install', 'source'],
   }
-  for name in ['local', 'docker']
+  for name in ['dev-local', 'dev-docker', 'e2e-local']
 };
 
 {

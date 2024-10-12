@@ -14,6 +14,10 @@
         docker: {
             path: 'docker',
             description: 'Docker related targets.'
+        },
+        e2e: {
+            path: 'e2e',
+            description: 'Playwright E2E tests suite.'
         }
     },
     # workspace global settings

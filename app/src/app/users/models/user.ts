@@ -11,7 +11,7 @@ export class User {
     readonly lastname: string
 
     get fullname(){
-        return `${this.lastname.toUpperCase()} ${this.firstname[0].toUpperCase()}${this.firstname.slice(1).toLowerCase()}`
+        return `${this.lastname} ${this.firstname}`
     }
 
     constructor(props: UserProps){

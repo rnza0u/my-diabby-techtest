@@ -1,4 +1,4 @@
-import { HttpClient, HttpStatusCode } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { map, Observable } from 'rxjs'
 import { Page } from '../../common/models/page'
 import { User } from '../models/user'
@@ -39,10 +39,12 @@ export class UsersRestService {
         url.searchParams.set('page', page.toString())
         url.searchParams.set('itemsPerPage', itemsPerPage.toString())
         return this.http.get<PageResponse<UserResponse>>(url.toString())
-            .pipe(map(page => new Page(
-                page.items.map(item => mapUserResponse(item)),
-                page.total
-            )))
+            .pipe(
+                map(page => new Page(
+                    page.items.map(item => mapUserResponse(item)),
+                    page.total
+                ))
+            )
     }
 
     add(firstname: string, lastname: string): Observable<User> {
