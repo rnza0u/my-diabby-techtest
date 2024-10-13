@@ -19,7 +19,6 @@ export function setupOpenApi(app: NestExpressApplication): void {
 
 /**
  * Generic REST API responses decorator.
- * @returns A decorator.
  */
 export const GenericRestResponses = () => applyDecorators(
     ApiExtraModels(ErrorResponse),
@@ -36,7 +35,6 @@ export const GenericRestResponses = () => applyDecorators(
 /**
  * Turn an object schema into multiple {@link ApiQuery} decorators, merged into one.
  * @param schemaObject The query object schema
- * @returns A decorator that would document all query parameters
  */
 export const ApiQueryParameters = (schemaObject: SchemaObject) => applyDecorators(
     ...Object.entries(schemaObject.properties!).map(([name, schema]) => ApiQuery({

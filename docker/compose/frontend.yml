@@ -1,14 +1,15 @@
 services:
-  api:
-    container_name: api
+  frontend:
+    container_name: frontend
     build:
-      dockerfile: ./dockerfiles/Dockerfile.api-dev
+      dockerfile: ./dockerfiles/Dockerfile.frontend-dev
       args:
         - HOST_UID=${UID}
     environment:
-      - API_CONFIG_PATH=${API_CONFIG_PATH}
+      - FRONTEND_LISTEN_ADDR=${FRONTEND_LISTEN_ADDR}
+      - FRONTEND_LISTEN_PORT=${FRONTEND_LISTEN_PORT}
     healthcheck:
-      test: "curl -f http://127.0.0.1/health"
+      test: "curl -f http://127.0.0.1/"
       interval: 10s
       timeout: 30s
       retries: 10

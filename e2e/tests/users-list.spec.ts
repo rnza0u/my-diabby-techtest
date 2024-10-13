@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test'
 import { testWithUsers } from '../fixtures/test-with-users'
 import { UsersListPage } from '../pages/users-list'
-import { getAppConfig } from '../helpers'
+import { getFrontendConfig } from '../helpers'
 
 const performListCommonAssertions = async (page: UsersListPage) => {
   const headers = await page.getHeaders()
@@ -164,7 +164,7 @@ noUsersTest('link to add user', async ({ page: _page }) => {
   await page.goto()
   await page.goToAdd()
 
-  const url = (await getAppConfig()).origin()
+  const url = (await getFrontendConfig()).origin()
   url.pathname = '/users/add'
   await _page.waitForURL(url.toString())
 })

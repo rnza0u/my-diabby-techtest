@@ -1,5 +1,5 @@
 import { Locator, Page } from '@playwright/test'
-import { getAppConfig } from '../helpers'
+import { getFrontendConfig } from '../helpers'
 
 type FormParams = Readonly<{
     lastname: string
@@ -10,7 +10,7 @@ export class AddUserPage {
     constructor(private readonly page: Page){}
 
     async goto(): Promise<void> {
-        const config = await getAppConfig()
+        const config = await getFrontendConfig()
         const url = config.origin()
         url.pathname = '/users/add'
         await this.page.goto(url.toString())

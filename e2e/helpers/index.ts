@@ -20,18 +20,18 @@ const databaseConfigEnvSchema = z.object({
     ...(envVars.DB_DATABASE ? { database: envVars.DB_DATABASE } : {})
 }))
 
-const appConfigEnvSchema = z.object({
-    'APP_ORIGIN': z.string().url().default('http://127.0.0.1:4000')
+const frontendConfigEnvSchema = z.object({
+    'FRONTEND_ORIGIN': z.string().url().default('http://127.0.0.1:4000')
         .transform(url => {
             const { origin } = new URL(url)
             return () => new URL(origin)
         })
 }).transform(envVars => ({
-    origin: envVars['APP_ORIGIN']
+    origin: envVars['FRONTEND_ORIGIN']
 }))
 
 type DatabaseConfig = z.infer<typeof databaseConfigEnvSchema>
-type AppConfig = z.infer<typeof appConfigEnvSchema>
+type AppConfig = z.infer<typeof frontendConfigEnvSchema>
 
 let databaseConfig: DatabaseConfig|null = null 
 let appConfig: AppConfig|null = null
@@ -43,9 +43,9 @@ async function getDatabaseConfig(): Promise<DatabaseConfig> {
     return databaseConfig
 }
 
-export async function getAppConfig(): Promise<AppConfig> {
+export async function getFrontendConfig(): Promise<AppConfig> {
     if (appConfig === null)
-        appConfig = await appConfigEnvSchema.parseAsync(process.env)
+        appConfig = await frontendConfigEnvSchema.parseAsync(process.env)
     return appConfig
 }
 

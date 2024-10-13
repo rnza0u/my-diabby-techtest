@@ -1,16 +1,34 @@
+local defaultEnv = {
+  WORKSPACE_ROOT: '{{ root }}',
+  UID: '{{ shell "id -u" trim=true }}',
+};
+
 local modes = {
   'only-database': {
-    composeFile: 'docker-compose.only-database.yml',
-    env: {},
+    file: 'docker-compose.only-database.yml'
   },
-  'dev-all': {
-    composeFile: 'docker-compose.dev.yml',
-    env: {
-      WORKSPACE_ROOT: '{{ root }}',
-      API_CONFIG_PATH: '{{ root}}/{{ workspace.projects.api.path }}/configuration/dev-docker.json',
-      UID: '{{ shell "id -u" trim=true }}',
+  'dev': {
+    file: 'docker-compose.dev.yml',
+    extraEnv: {
+      API_CONFIG_PATH: '/home/dev/workspace/{{ workspace.projects.api.path }}/configurations/dev-docker.json',
+      FRONTEND_LISTEN_ADDR: '0.0.0.0',
+      FRONTEND_LISTEN_PORT: '80'
     },
   },
+  'e2e': {
+    file: 'docker-compose.e2e.yml',
+    extraEnv: {
+      API_CONFIG_PATH: '/home/dev/workspace/{{ workspace.projects.api.path }}/configurations/e2e-docker.json',
+      FRONTEND_LISTEN_ADDR: '0.0.0.0',
+      FRONTEND_LISTEN_PORT: '80',
+      E2E_DB_HOST: 'database',
+      E2E_DB_PORT: '5432',
+      E2E_DB_USERNAME: 'postgres',
+      E2E_DB_PASSWORD: 'postgres',
+      E2E_DB_DATABASE: 'e2e',
+      E2E_FRONTEND_ORIGIN: 'http://frontend'
+    },
+  }
 };
 
 local upTargets = {
@@ -23,13 +41,13 @@ local upTargets = {
           arguments: [
             'compose',
             '-f',
-            modes[name].composeFile,
+            modes[name].file,
             'up',
             '--remove-orphans',
             '--force-recreate',
             '--build',
           ],
-          environment: modes[name].env,
+          environment: defaultEnv + (if std.objectHas(modes[name], 'extraEnv') then modes[name].extraEnv else {}),
         },
       ],
     },
@@ -46,12 +64,12 @@ local downTargets = {
           arguments: [
             'compose',
             '-f',
-            modes[name].composeFile,
+            modes[name].file,
             'down',
             '--volumes',
             '--remove-orphans'
           ],
-          environment: modes[name].env,
+          environment: defaultEnv + (if std.objectHas(modes[name], 'extraEnv') then modes[name].extraEnv else {}),
         },
       ],
     },

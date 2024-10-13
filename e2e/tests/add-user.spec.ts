@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test'
 import { testWithUsers } from '../fixtures/test-with-users'
 import { AddUserPage } from '../pages/add-user'
-import { getAppConfig } from '../helpers'
+import { getFrontendConfig } from '../helpers'
 import { UsersListPage } from '../pages/users-list'
 
 const noUsersTest = testWithUsers([])
@@ -23,7 +23,7 @@ noUsersTest('create user', async ({ page: _page }) => {
     const message = await addUserPage.getMessage(`L'utilisateur Chopin Frédéric a été ajouté avec succès. Redirection en cours...`)
     await expect(message).toBeVisible()
 
-    const config = await getAppConfig()
+    const config = await getFrontendConfig()
     const url = config.origin()
     url.pathname = '/users'
     await _page.waitForURL(url.toString())

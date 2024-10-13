@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test'
-import { getAppConfig } from '../helpers'
+import { getFrontendConfig } from '../helpers'
 
 export type DisplayedUser = Readonly<{
     firstname: string
@@ -11,7 +11,7 @@ export class UsersListPage {
     constructor(private readonly page: Page){}
 
     async goto(): Promise<void> {
-        const config = await getAppConfig()
+        const config = await getFrontendConfig()
         const url = config.origin()
         url.pathname = '/users'
         await this.page.goto(url.toString())

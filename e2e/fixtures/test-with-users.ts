@@ -19,7 +19,7 @@ export type UserRecord = Readonly<{
 
 export const testWithUsers = (requestedUsers: readonly RequestedUser[]) => base.extend<UsersFixtures>({
     users: [
-        async ({ page: _ }, use) => {
+        async ({ page: _page }, use) => {
             const database = await getDatabaseConnection()
             const users = await database.tx(async tx => {
                 await tx.result('TRUNCATE TABLE users')

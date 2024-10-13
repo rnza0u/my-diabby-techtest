@@ -1,4 +1,6 @@
 local blaze = std.extVar('blaze');
+local helpers = import 'helpers.libsonnet';
+local getVar = helpers.getVar;
 
 local serveTargets = {
   ['serve-' + name]: {
@@ -35,6 +37,25 @@ local serveTargets = {
           outputChanges: ['package-lock.json'],
         },
       },
+    },
+    serve: {
+      executor: 'std:commands',
+      options: {
+        commands: [
+          {
+            program: 'npm',
+            arguments: ['run', 'start:dev'],
+            environment: {
+              CONFIG_PATH: getVar({
+                env: 'API_CONFIG_PATH',
+                var: 'api.configPath',
+                default: '{{ project.root }}/configurations/dev-local.json'
+              }) 
+            },
+          },
+        ],
+      },
+      dependencies: ['install', 'source'],
     },
     lint: {
       executor: 'std:commands',
@@ -96,5 +117,5 @@ local serveTargets = {
             ]
         }
     }
-  } + serveTargets,
+  },
 }

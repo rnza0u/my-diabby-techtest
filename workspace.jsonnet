@@ -3,8 +3,8 @@
     name: 'my-diabby-techtest',
     # add an entry to this dictionnary everytime you want to create a new project.
     projects: {
-        app: {
-            path: 'app',
+        frontend: {
+            path: 'frontend',
             description: 'The Angular webapp.'
         },
         api: {
