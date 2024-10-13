@@ -2,25 +2,6 @@ local blaze = std.extVar('blaze');
 local helpers = import 'helpers.libsonnet';
 local getVar = helpers.getVar;
 
-local serveTargets = {
-  ['serve-' + name]: {
-    executor: 'std:commands',
-    options: {
-      commands: [
-        {
-          program: 'npm',
-          arguments: ['run', 'start:dev'],
-          environment: {
-            CONFIG_PATH: '{{ project.root }}/configurations/' + name + '.json',
-          },
-        },
-      ],
-    },
-    dependencies: ['install', 'source'],
-  }
-  for name in ['dev-local', 'dev-docker', 'e2e-local']
-};
-
 {
   targets: {
     install: {
