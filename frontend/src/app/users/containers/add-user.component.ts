@@ -49,7 +49,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
                                 this.snackMessage('Cet utilisateur existe déjà !')
                                 break
                             default:
-                                this.snackMessage(`Une erreur est survenue...`)
+                                this.snackMessage('Une erreur est survenue...')
                                 break
                         }
                     }

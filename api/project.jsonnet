@@ -30,8 +30,8 @@ local getVar = helpers.getVar;
               CONFIG_PATH: getVar({
                 env: 'API_CONFIG_PATH',
                 var: 'api.configPath',
-                default: '{{ project.root }}/configurations/dev-local.json'
-              }) 
+                default: '{{ project.root }}/configurations/dev-local.json',
+              }),
             },
           },
         ],
@@ -91,12 +91,12 @@ local getVar = helpers.getVar;
       dependencies: ['install', 'source'],
     },
     clean: {
-        executor: 'std:commands',
-        options: {
-            commands: [
-                'rm -rf node_modules dist'
-            ]
-        }
-    }
+      executor: 'std:commands',
+      options: {
+        commands: [
+          'rm -rf node_modules dist',
+        ],
+      },
+    },
   },
 }

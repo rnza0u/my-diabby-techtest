@@ -1,5 +1,5 @@
-import { HttpErrorResponse, HttpEvent, HttpEventType, HttpHandlerFn, HttpRequest, HttpResponse } from '@angular/common/http'
-import { catchError, map, Observable, throwError } from 'rxjs'
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http'
+import { catchError, Observable, throwError } from 'rxjs'
 import { ApiErrorResponse } from '../errors/api-error'
 import { inject } from '@angular/core'
 import { BACKEND_URL_SUPPLIER } from '../../app.tokens'

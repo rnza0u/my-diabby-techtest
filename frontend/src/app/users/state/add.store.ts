@@ -10,7 +10,7 @@ export type AddUserParams = Readonly<{
     lastname: string
 }>
 
-export type Creation =
+export type CreationState =
     | Readonly<{
         step: 'waiting'
     }>
@@ -18,7 +18,7 @@ export type Creation =
         step: 'adding',
         params: AddUserParams
     }>
-    |Readonly<{
+    | Readonly<{
         step: 'done'
     }>
     | Readonly<{
@@ -36,7 +36,7 @@ export class AddUserStore {
 
     constructor(private readonly usersRestService: UsersRestService) { }
 
-    private readonly creation$ = new BehaviorSubject<Creation>({
+    private readonly creation$ = new BehaviorSubject<CreationState>({
         step: 'waiting'
     })
 
@@ -45,7 +45,7 @@ export class AddUserStore {
     /**
      * Etat du formulaire de création.
      */
-    creation(): Observable<Creation> {
+    creation(): Observable<CreationState> {
         return this.creation$.asObservable()
     }
 
