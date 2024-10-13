@@ -4,8 +4,8 @@ local defaultEnv = {
 };
 
 local modes = {
-  'only-database': {
-    file: 'docker-compose.only-database.yml'
+  'database': {
+    file: 'docker-compose.database.yml'
   },
   'dev': {
     file: 'docker-compose.dev.yml',
