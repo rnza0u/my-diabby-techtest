@@ -13,7 +13,7 @@ export class ZodValidationPipe implements PipeTransform {
             return await this.schema.parseAsync(value)
         } catch (error: unknown) {
             if (error instanceof ZodError)
-                throw new BadRequestException(`input validation failed (${error.errors.map(error => error.message).join(', ')})`)
+                throw new BadRequestException(`input validation failed (${error.errors.map(error => `"${error.path}": ${error.message}`).join(', ')})`)
             throw new InternalServerErrorException(error)
         }
     }
